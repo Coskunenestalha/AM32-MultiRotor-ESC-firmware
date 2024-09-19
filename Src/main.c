@@ -757,7 +757,7 @@ void loadEEpromSettings(){
 	   }
 
 
-       if(motor_kv < 300){
+       if(motor_kv < 301){
 		   low_rpm_throttle_limit = 0;
 	   }
 	   low_rpm_level  = motor_kv / 100 / (32 / motor_poles);
