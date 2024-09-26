@@ -8,7 +8,7 @@
  * --Added firmware name to targets and firmware version to main
  * --added two more dshot to beacons 1-3 currently working
  * --added KV option to firmware, low rpm power protection is based on KV
- * --start power now controls minimum idle power as well as startup strength.
+ * --start power now controls minimum idle power as well as startup strength. 
  * --change default timing to 22.5
  * --Lowered default minimum idle setting to 1.5 percent duty cycle, slider range from 1-2.
  * --Added dshot commands to save settings and reset ESC.
@@ -701,7 +701,7 @@ void loadEEpromSettings(){
 	   }*/
 	   
 	   if(eepromBuffer[42] > 0 && eepromBuffer[42] < 10){        // motor brake 1-9
-      / driving_brake_strength = eepromBuffer[42];
+      // driving_brake_strength = eepromBuffer[42];
 	   dead_time_override = DEAD_TIME + (150 - (driving_brake_strength * 10));
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
