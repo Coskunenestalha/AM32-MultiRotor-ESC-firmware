@@ -616,7 +616,7 @@ void loadEEpromSettings(){
 	    	advance_level = 10.31;  // * 7.5 increments
 	   // }
 
-	   */if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
+	   /*if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
 		   if(eepromBuffer[24] < 49 && eepromBuffer[24] > 23){
 			   TIMER1_MAX_ARR = map (eepromBuffer[24], 24, 48, TIM1_AUTORELOAD,TIM1_AUTORELOAD/2);
 		   }
@@ -629,7 +629,7 @@ void loadEEpromSettings(){
 		   TIM1->ARR = TIMER1_MAX_ARR;
 		   throttle_max_at_high_rpm = TIMER1_MAX_ARR;
 		   duty_cycle_maximum = TIMER1_MAX_ARR;
-	    }else{/*
+	    }else{*/
 	    	tim1_arr = TIM1_AUTORELOAD;
 	    	TIM1->ARR = tim1_arr;
 	   // }
