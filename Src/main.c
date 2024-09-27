@@ -231,11 +231,11 @@ uint32_t MINIMUM_RPM_SPEED_CONTROL = 500;
  };
 
  fastPID currentPid = {   // 1khz loop time
- 		.Kp = 1000,
- 		.Ki = 50,
+ 		.Kp = 800,
+ 		.Ki = 0,
  		.Kd = 1000,
  		.integral_limit = 20000,
- 		.output_limit = 120000
+ 		.output_limit = 100000
  };
 
  fastPID stallPid = {          //1khz loop time
@@ -581,35 +581,35 @@ float doPidCalculations(struct fastPID *pidnow, int actual, int target){
 void loadEEpromSettings(){
 	   read_flash_bin( eepromBuffer , EEPROM_START_ADD , 176);
 
-	   /*if(eepromBuffer[17] == 0x01){
+	   if(eepromBuffer[17] == 0x01){
 	 	  dir_reversed =  1;
-	   }else{*/
+	   }else{
 		   dir_reversed = 0;
-	//   }
-	/*  if(eepromBuffer[18] == 0x01){
+	   }
+	   if(eepromBuffer[18] == 0x01){
 	 	  bi_direction = 1;
-	   }else{*/
+	   }else{
 		  bi_direction = 0;
-	  // }
-	  // if(eepromBuffer[19] == 0x01){
-	 	  use_sin_start = 0;
+	   }
+	   if(eepromBuffer[19] == 0x01){
+	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
-	  // }
-	  // if(eepromBuffer[20] == 0x01){
+	   }
+	   if(eepromBuffer[20] == 0x01){
 	  	  comp_pwm = 1;
-	  /*  }else{
+	    }else{
 	    	comp_pwm = 0;
-	    }*/
-	  /* if(eepromBuffer[21] == 0x01){
+	    }
+	   if(eepromBuffer[21] == 0x01){
 		   VARIABLE_PWM = 1;
-	    }else{*/
+	    }else{
 	    	VARIABLE_PWM = 0;
-	   // }
-	  /*if(eepromBuffer[22] == 0x01){
+	    }
+	   if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{*/
+	    }else{
 	    	stuck_rotor_protection = 0;
-	  //  }
+	    }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
@@ -642,18 +642,18 @@ void loadEEpromSettings(){
 	    	min_startup_duty = 150;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
-      motor_kv =4150; //(eepromBuffer[26] * 40) + 20;
-      motor_poles = 2;//eepromBuffer[27];
-	   /*if(eepromBuffer[28] == 0x01){
+      motor_kv = (eepromBuffer[26] * 40) + 20;
+      motor_poles = eepromBuffer[27];
+	   if(eepromBuffer[28] == 0x01){
 		   brake_on_stop = 1;
-	    }else{*/
+	    }else{
 	    	brake_on_stop = 0;
-	  //  }
-	  /* if(eepromBuffer[29] == 0x01){
+	    }
+	   if(eepromBuffer[29] == 0x01){
 		   stall_protection = 1;
-	    }else{*/
+	    }else{
 	    	stall_protection = 0;
-	   // }
+	    }
 	   setVolume(5);
 	   if(eepromBuffer[1] > 0){             // these commands weren't introduced until eeprom version 1.
 
@@ -664,26 +664,26 @@ void loadEEpromSettings(){
 		   }
 		   if(eepromBuffer[31] == 0x01){
 			   TLM_ON_INTERVAL = 1;
-		  /* }else{
+		   }else{
 			   TLM_ON_INTERVAL = 0;
-		   }*/
+		   }
 		   servo_low_threshold = (eepromBuffer[32]*2) + 750; // anything below this point considered 0
 		   servo_high_threshold = (eepromBuffer[33]*2) + 1750;;  // anything above this point considered 2000 (max)
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		  /* if(eepromBuffer[36] == 0x01){
+		   if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
-		   }else{*/
+		   }else{
 			   LOW_VOLTAGE_CUTOFF = 0;
-		   //}
+		   }
 
 		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
-		  /* if(eepromBuffer[38] == 0x01){
+		   if(eepromBuffer[38] == 0x01){
 			   RC_CAR_REVERSE = 1;
-		   }else{*/
+		   }else{
 			   RC_CAR_REVERSE = 0;
-		 //  }
+		   }
 		   if(eepromBuffer[39] == 0x01){
 #ifdef HAS_HALL_SENSORS
 			   USE_HALL_SENSOR = 1;
@@ -718,11 +718,11 @@ void loadEEpromSettings(){
 	   
 	   }
 	   
-	  /*if(eepromBuffer[44] > 0 && eepromBuffer[44] < 100){
+	   if(eepromBuffer[44] > 0 && eepromBuffer[44] < 100){
 	   CURRENT_LIMIT = eepromBuffer[44] * 2;
 	   use_current_limit = 1;
 	   
-	   }*/
+	   }
 	   if(eepromBuffer[45] > 0 && eepromBuffer[45] < 11){ 
 	   sine_mode_power = eepromBuffer[45];
 	   }
@@ -802,11 +802,11 @@ void saveEEpromSettings(){
       }else{
     	  eepromBuffer[21] = 0x00;
       }
-   /*if(stuck_rotor_protection == 1){
+   if(stuck_rotor_protection == 1){
 	   eepromBuffer[22] = 0x01;
-      }else{*/
+      }else{
     	  eepromBuffer[22] = 0x00;
-    //  }
+      }
    eepromBuffer[23] = advance_level;
    save_flash_nolib(eepromBuffer, 176, EEPROM_START_ADD);
 }
@@ -885,15 +885,15 @@ void commutate(){
 		rising = !(step % 2);
 	}
 
-	//if(!prop_brake_active){
+	if(!prop_brake_active){
 	comStep(step);
-	//}
+	}
 
 	changeCompInput();
 
-/*if(average_interval > 2000 && (stall_protection || RC_CAR_REVERSE)){
+if(average_interval > 2000 && (stall_protection || RC_CAR_REVERSE)){
 	old_routine = 1;
-}*/
+}
 	bemfcounter = 0;
 	zcfound = 0;
 	  if(use_speed_control_loop && running){
@@ -1402,9 +1402,9 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
 	advance = commutation_interval / advancedivisor;
 	waitTime = commutation_interval /2  - advance;
 	while (INTERVAL_TIMER->CNT < waitTime){
-   /* if(zero_crosses < 10){
+    if(zero_crosses < 10){
     	break;
-    }*/
+    }
 	}
 	commutate();
     bemfcounter = 0;
@@ -1587,7 +1587,7 @@ loadEEpromSettings();
 		use_sin_start = 0;  // sine start requires complementary pwm.
 	}
 
-	/*if (RC_CAR_REVERSE) {         // overrides a whole lot of things!
+	if (RC_CAR_REVERSE) {         // overrides a whole lot of things!
 		throttle_max_at_low_rpm = 1000;
 		bi_direction = 1;
 		use_sin_start = 0;
@@ -1600,7 +1600,7 @@ loadEEpromSettings();
 		stall_protect_minimum_duty = stall_protect_minimum_duty + 50;
 		min_startup_duty = min_startup_duty + 50;
 	}
-*/
+
 #ifdef MCU_F031
 	  GPIOF->BSRR = LL_GPIO_PIN_6;            // uncomment to take bridge out of standby mode and set oc level
 	  GPIOF->BRR = LL_GPIO_PIN_7;				// out of standby mode
@@ -1738,7 +1738,7 @@ if(newinput > 2000){
 #endif
 	  stuckcounter = 0;
 
-  		  /*if (bi_direction == 1 && dshot == 0){
+  		  if (bi_direction == 1 && dshot == 0){
   			  if(RC_CAR_REVERSE){
   				  if (newinput > (1000 + (servo_dead_band<<1))) {
   					  if (forward == dir_reversed) {
@@ -1850,9 +1850,9 @@ if(newinput > 2000){
   			  }
 
 
-  		  }else{*/
+  		  }else{
   			  adjusted_input = newinput;
-  		//  }
+  		  }
 #ifndef BRUSHED_MODE
 
 	 	 if ((zero_crosses > 1000) || (adjusted_input == 0)){
@@ -1943,8 +1943,7 @@ if(newinput > 2000){
   				}
 #endif
 	 	  }
-		  //if ( stepper_sine == 0)
-		  if ( 1){
+		  if ( stepper_sine == 0){
 
   e_rpm = running * (600000/ e_com_time);       // in tens of rpm
   k_erpm =  e_rpm / 10; // ecom time is time for one electrical revolution in microseconds
@@ -1983,8 +1982,7 @@ if(motor_kv < 500){
 }
 
 /**************** old routine*********************/
-//if (old_routine && running)
-if (1){
+if (old_routine && running){
 	maskPhaseInterrupts();
 	 		 getBemfState();
 	 	  if (!zcfound){
@@ -2085,9 +2083,9 @@ if(input > 48 && armed){
 				  prop_brake_active = 0;
 	 			  step = changeover_step;                    // rising bemf on a same as position 0.
 		 		// comStep(step);// rising bemf on a same as position 0.
-				/*if(stall_protection){
+				if(stall_protection){
 				minimum_duty_cycle = stall_protect_minimum_duty;
-				}*/
+				}
 	 			commutate();
 	 			//enableCompInterrupts();
 				LL_TIM_GenerateEvent_UPDATE(TIM1);
@@ -2127,7 +2125,6 @@ runBrushedLoop();
 #endif
   		}
 }
-}
 
 
 
@@ -2147,4 +2144,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
