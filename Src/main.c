@@ -1402,9 +1402,9 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
 	advance = commutation_interval / advancedivisor;
 	waitTime = commutation_interval /2  - advance;
 	while (INTERVAL_TIMER->CNT < waitTime){
-    /*if(zero_crosses < 10){
+    if(zero_crosses < 10){
     	break;
-    }*/
+    }
 	}
 	commutate();
     bemfcounter = 0;
