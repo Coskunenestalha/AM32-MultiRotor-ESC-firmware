@@ -1738,7 +1738,7 @@ if(newinput > 2000){
 #endif
 	  stuckcounter = 0;
 
-  		  if (bi_direction == 1 && dshot == 0){
+  		  /*if (bi_direction == 1 && dshot == 0){
   			  if(RC_CAR_REVERSE){
   				  if (newinput > (1000 + (servo_dead_band<<1))) {
   					  if (forward == dir_reversed) {
@@ -1850,9 +1850,9 @@ if(newinput > 2000){
   			  }
 
 
-  		  }else{
+  		  }else{*/
   			  adjusted_input = newinput;
-  		  }
+  		  //}
 #ifndef BRUSHED_MODE
 
 	 	 if ((zero_crosses > 1000) || (adjusted_input == 0)){
@@ -1883,7 +1883,7 @@ if(newinput > 2000){
  	 	 		bemf_timeout = 10;
  	 	 	 }
  	 	 }
-	  if(bemf_timeout_happened > bemf_timeout * ( 1 + (crawler_mode*100))&& stuck_rotor_protection){
+	  /*if(bemf_timeout_happened > bemf_timeout * ( 1 + (crawler_mode*100))&& stuck_rotor_protection){
 	 		 allOff();
 	 		 maskPhaseInterrupts();
 	 		 input = 0;
@@ -1893,7 +1893,8 @@ if(newinput > 2000){
 			  GPIOB->BSRR = LL_GPIO_PIN_5;  //
 			  GPIOB->BSRR = LL_GPIO_PIN_3;
 #endif
-	 	  }else{
+	 	  }else*/
+	  {
 #ifdef FIXED_DUTY_MODE
   			input = FIXED_DUTY_MODE_POWER * 20 + 47;
 #else
