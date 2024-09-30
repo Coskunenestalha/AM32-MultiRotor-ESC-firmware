@@ -600,16 +600,16 @@ void loadEEpromSettings(){
 	  /*  }else{
 	    	comp_pwm = 0;
 	    }*/
-	   if(eepromBuffer[21] == 0x01){
+	  // if(eepromBuffer[21] == 0x01){
 		   VARIABLE_PWM = 1;
-	    }else{
+	  /*  }else{
 	    	VARIABLE_PWM = 0;
-	    }
-	   if(eepromBuffer[22] == 0x01){
+	    }*/
+	  /* if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{
+	    }else{*/
 	    	stuck_rotor_protection = 0;
-	    }
+	 //   }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
