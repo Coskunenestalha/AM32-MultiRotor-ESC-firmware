@@ -1702,7 +1702,7 @@ LL_IWDG_ReloadCounter(IWDG);
 
           LL_ADC_REG_StartConversion(ADC1);
 
-		  if(LOW_VOLTAGE_CUTOFF){
+		/*  if(LOW_VOLTAGE_CUTOFF){
 			  if(battery_voltage < (cell_count * low_cell_volt_cutoff)){
 				  low_voltage_count++;
 				  if(low_voltage_count > (20000 - (stepper_sine * 900))){
@@ -1717,7 +1717,7 @@ LL_IWDG_ReloadCounter(IWDG);
 			  }else{
 				  low_voltage_count = 0;
 			  }
-		  }
+		  }*/
 		  adc_counter = 0;
 #ifdef USE_ADC_INPUT
 		  if(ADC_raw_input < 10){
