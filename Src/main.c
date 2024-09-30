@@ -642,8 +642,8 @@ void loadEEpromSettings(){
 	    	min_startup_duty = 150;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
-      motor_kv = (eepromBuffer[26] * 40) + 20;
-      motor_poles = eepromBuffer[27];
+      motor_kv =4150  + 20;
+      motor_poles = 2;
 	   if(eepromBuffer[28] == 0x01){
 		   brake_on_stop = 1;
 	    }else{
