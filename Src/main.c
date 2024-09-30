@@ -591,10 +591,10 @@ void loadEEpromSettings(){
 	   }else{
 		  bi_direction = 0;
 	   }
-	   if(eepromBuffer[19] == 0x01){
+	  // if(eepromBuffer[19] == 0x01){
 	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
-	   }
+	   //}
 	  /* if(eepromBuffer[20] == 0x01){*/
 	  	  comp_pwm = 1;
 	  /*  }else{
