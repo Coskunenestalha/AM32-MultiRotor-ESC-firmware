@@ -595,11 +595,11 @@ void loadEEpromSettings(){
 	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
 	   }
-	   if(eepromBuffer[20] == 0x01){
+	  /* if(eepromBuffer[20] == 0x01){*/
 	  	  comp_pwm = 1;
-	    }else{
+	  /*  }else{
 	    	comp_pwm = 0;
-	    }
+	    }*/
 	   if(eepromBuffer[21] == 0x01){
 		   VARIABLE_PWM = 1;
 	    }else{
