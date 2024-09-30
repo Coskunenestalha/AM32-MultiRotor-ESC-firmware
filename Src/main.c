@@ -1398,9 +1398,9 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
 	advance = commutation_interval / advancedivisor;
 	waitTime = commutation_interval /2  - advance;
 	while (INTERVAL_TIMER->CNT < waitTime){
-    if(zero_crosses < 10){
+    /*if(zero_crosses < 10){
     	break;
-    }
+    }*/
 	}
 	commutate();
     bemfcounter = 0;
@@ -1698,7 +1698,7 @@ LL_IWDG_ReloadCounter(IWDG);
 
           LL_ADC_REG_StartConversion(ADC1);
 
-		  if(LOW_VOLTAGE_CUTOFF){
+		 /* if(LOW_VOLTAGE_CUTOFF){
 			  if(battery_voltage < (cell_count * low_cell_volt_cutoff)){
 				  low_voltage_count++;
 				  if(low_voltage_count > (20000 - (stepper_sine * 900))){
@@ -1710,9 +1710,9 @@ LL_IWDG_ReloadCounter(IWDG);
 				  armed = 0;
 
 				  }
-			  }else{
+			  }else{*/
 				  low_voltage_count = 0;
-			  }
+			 // }
 		  }
 		  adc_counter = 0;
 #ifdef USE_ADC_INPUT
@@ -1939,7 +1939,7 @@ if(newinput > 2000){
   				}
 #endif
 	 	  }
-		  if ( stepper_sine == 0){
+		  if ( 1){
 
   e_rpm = running * (600000/ e_com_time);       // in tens of rpm
   k_erpm =  e_rpm / 10; // ecom time is time for one electrical revolution in microseconds
@@ -1978,7 +1978,7 @@ if(motor_kv < 500){
 }
 
 /**************** old routine*********************/
-if (old_routine && running){
+if (1){
 	maskPhaseInterrupts();
 	 		 getBemfState();
 	 	  if (!zcfound){
