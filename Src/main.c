@@ -585,7 +585,7 @@ void loadEEpromSettings(){
 	 	  dir_reversed =  1;
 	   }else{
 		   dir_reversed = 0;
-	  /}
+	  }
 	  /* if(eepromBuffer[18] == 0x01){
 	 	  bi_direction = 1;
 	   }else{*/
