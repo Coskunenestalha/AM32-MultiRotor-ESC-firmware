@@ -586,11 +586,11 @@ void loadEEpromSettings(){
 	   }else{*/
 		   dir_reversed = 0;
 	  // }
-	   if(eepromBuffer[18] == 0x01){
+	   /*if(eepromBuffer[18] == 0x01){
 	 	  bi_direction = 1;
-	   }else{
+	   }else{*/
 		  bi_direction = 0;
-	   }
+	  // }
 	  // if(eepromBuffer[19] == 0x01){
 	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
