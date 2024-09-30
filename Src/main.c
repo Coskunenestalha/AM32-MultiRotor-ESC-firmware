@@ -581,35 +581,35 @@ float doPidCalculations(struct fastPID *pidnow, int actual, int target){
 void loadEEpromSettings(){
 	   read_flash_bin( eepromBuffer , EEPROM_START_ADD , 176);
 
-	 /*if(eepromBuffer[17] == 0x01){
+	   if(eepromBuffer[17] == 0x01){
 	 	  dir_reversed =  1;
-	   }else{*/
+	   }else{
 		   dir_reversed = 0;
-	  // }
-	 /*  if(eepromBuffer[18] == 0x01){
+	   }
+	   if(eepromBuffer[18] == 0x01){
 	 	  bi_direction = 1;
-	   }else{*/
+	   }else{
 		  bi_direction = 0;
-	  // }
-	  // if(eepromBuffer[19] == 0x01){
+	   }
+	   if(eepromBuffer[19] == 0x01){
 	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
-	  // }
-	   //if(eepromBuffer[20] == 0x01){
+	   }
+	   if(eepromBuffer[20] == 0x01){
 	  	  comp_pwm = 1;
-	   /* }else{
+	    }else{
 	    	comp_pwm = 0;
-	    }*/
-	  // if(eepromBuffer[21] == 0x01){
+	    }
+	   if(eepromBuffer[21] == 0x01){
 		   VARIABLE_PWM = 1;
-	   /* }else{
+	    }else{
 	    	VARIABLE_PWM = 0;
-	    }*/
-	   /*if(eepromBuffer[22] == 0x01){
+	    }
+	   if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{*/
+	    }else{
 	    	stuck_rotor_protection = 0;
-	   // }
+	    }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
@@ -642,18 +642,18 @@ void loadEEpromSettings(){
 	    	min_startup_duty = 150;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
-      motor_kv = 4150 + 20;
-      motor_poles = 2;
-	   /*if(eepromBuffer[28] == 0x01){
+      motor_kv = (eepromBuffer[26] * 40) + 20;
+      motor_poles = eepromBuffer[27];
+	   if(eepromBuffer[28] == 0x01){
 		   brake_on_stop = 1;
-	    }else{*/
+	    }else{
 	    	brake_on_stop = 0;
-	    //}
-	   /*if(eepromBuffer[29] == 0x01){
+	    }
+	   if(eepromBuffer[29] == 0x01){
 		   stall_protection = 1;
-	    }else{*/
+	    }else{
 	    	stall_protection = 0;
-	   // }
+	    }
 	   setVolume(5);
 	   if(eepromBuffer[1] > 0){             // these commands weren't introduced until eeprom version 1.
 
@@ -672,18 +672,18 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		  /* if(eepromBuffer[36] == 0x01){
+		   if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
-		   }else{*/
+		   }else{
 			   LOW_VOLTAGE_CUTOFF = 0;
-		   //}
+		   }
 
 		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
-		   /*if(eepromBuffer[38] == 0x01){
+		   if(eepromBuffer[38] == 0x01){
 			   RC_CAR_REVERSE = 1;
-		   }else{*/
+		   }else{
 			   RC_CAR_REVERSE = 0;
-		   //}
+		   }
 		   if(eepromBuffer[39] == 0x01){
 #ifdef HAS_HALL_SENSORS
 			   USE_HALL_SENSOR = 1;
@@ -720,7 +720,7 @@ void loadEEpromSettings(){
 	   
 	   if(eepromBuffer[44] > 0 && eepromBuffer[44] < 100){
 	   CURRENT_LIMIT = eepromBuffer[44] * 2;
-	   //use_current_limit = 1;
+	   use_current_limit = 1;
 	   
 	   }
 	   if(eepromBuffer[45] > 0 && eepromBuffer[45] < 11){ 
@@ -1398,9 +1398,9 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
 	advance = commutation_interval / advancedivisor;
 	waitTime = commutation_interval /2  - advance;
 	while (INTERVAL_TIMER->CNT < waitTime){
-    /*if(zero_crosses < 10){
+    if(zero_crosses < 10){
     	break;
-    }*/
+    }
 	}
 	commutate();
     bemfcounter = 0;
@@ -1698,7 +1698,7 @@ LL_IWDG_ReloadCounter(IWDG);
 
           LL_ADC_REG_StartConversion(ADC1);
 
-		 /* if(LOW_VOLTAGE_CUTOFF){
+		  if(LOW_VOLTAGE_CUTOFF){
 			  if(battery_voltage < (cell_count * low_cell_volt_cutoff)){
 				  low_voltage_count++;
 				  if(low_voltage_count > (20000 - (stepper_sine * 900))){
@@ -1710,9 +1710,9 @@ LL_IWDG_ReloadCounter(IWDG);
 				  armed = 0;
 
 				  }
-			  }else{*/
+			  }else{
 				  low_voltage_count = 0;
-			 // }
+			  }
 		  }
 		  adc_counter = 0;
 #ifdef USE_ADC_INPUT
@@ -1939,7 +1939,7 @@ if(newinput > 2000){
   				}
 #endif
 	 	  }
-		  if ( 1){
+		  if ( stepper_sine == 0){
 
   e_rpm = running * (600000/ e_com_time);       // in tens of rpm
   k_erpm =  e_rpm / 10; // ecom time is time for one electrical revolution in microseconds
@@ -1978,7 +1978,7 @@ if(motor_kv < 500){
 }
 
 /**************** old routine*********************/
-if (1){
+if (old_routine && running){
 	maskPhaseInterrupts();
 	 		 getBemfState();
 	 	  if (!zcfound){
