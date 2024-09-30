@@ -581,11 +581,11 @@ float doPidCalculations(struct fastPID *pidnow, int actual, int target){
 void loadEEpromSettings(){
 	   read_flash_bin( eepromBuffer , EEPROM_START_ADD , 176);
 
-	   if(eepromBuffer[17] == 0x01){
+	  /* if(eepromBuffer[17] == 0x01){
 	 	  dir_reversed =  1;
-	   }else{
+	   }else{*/
 		   dir_reversed = 0;
-	   }
+	  // }
 	   if(eepromBuffer[18] == 0x01){
 	 	  bi_direction = 1;
 	   }else{
