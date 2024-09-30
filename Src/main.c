@@ -581,35 +581,15 @@ float doPidCalculations(struct fastPID *pidnow, int actual, int target){
 void loadEEpromSettings(){
 	   read_flash_bin( eepromBuffer , EEPROM_START_ADD , 176);
 
-	   if(eepromBuffer[17] == 0x01){
-	 	  dir_reversed =  1;
-	   }else{
+	  
 		   dir_reversed = 0;
-	  }
-	  /* if(eepromBuffer[18] == 0x01){
-	 	  bi_direction = 1;
-	   }else{*/
 		  bi_direction = 0;
-	//   }
-	  // if(eepromBuffer[19] == 0x01){
 	 	  use_sin_start = 1;
 	 //	 min_startup_duty = sin_mode_min_s_d;
-	 //  }
-	   //if(eepromBuffer[20] == 0x01){
 	  	  comp_pwm = 1;
-	 /*   }else{
-	    	comp_pwm = 0;
-	    }*/
-	  // if(eepromBuffer[21] == 0x01){
+	 
 		   VARIABLE_PWM = 1;
-	 /*   }else{
-	    	VARIABLE_PWM = 0;
-	    }*/
-	   if(eepromBuffer[22] == 0x01){
-		   stuck_rotor_protection = 1;
-	    }else{
 	    	stuck_rotor_protection = 0;
-	    }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
