@@ -679,11 +679,11 @@ void loadEEpromSettings(){
 		  // }
 
 		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
-		   if(eepromBuffer[38] == 0x01){
+		   /*if(eepromBuffer[38] == 0x01){
 			   RC_CAR_REVERSE = 1;
-		   }else{
+		   }else{*/
 			   RC_CAR_REVERSE = 0;
-		   }
+		 //  }
 		   if(eepromBuffer[39] == 0x01){
 #ifdef HAS_HALL_SENSORS
 			   USE_HALL_SENSOR = 1;
@@ -720,7 +720,7 @@ void loadEEpromSettings(){
 	   
 	   if(eepromBuffer[44] > 0 && eepromBuffer[44] < 100){
 	   CURRENT_LIMIT = eepromBuffer[44] * 2;
-	   use_current_limit = 1;
+	  // use_current_limit = 1;
 	   
 	   }
 	   if(eepromBuffer[45] > 0 && eepromBuffer[45] < 11){ 
