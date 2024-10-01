@@ -636,7 +636,7 @@ duty_cycle_maximum =tim1_arr;
 	  //  }*/
 
 	  if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = (eepromBuffer[25] + DEAD_TIME+200) * TIMER1_MAX_ARR / 2000;
+	   min_startup_duty = (eepromBuffer[25] + DEAD_TIME) * TIMER1_MAX_ARR / 2000;
 	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }/*else{
