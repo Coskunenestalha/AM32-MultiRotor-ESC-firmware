@@ -354,7 +354,7 @@ int16_t actual_current = 0;
 
 char lowkv = 0;
 
-uint16_t min_startup_duty = 120+200;
+uint16_t min_startup_duty = 120+400;
 uint16_t sin_mode_min_s_d = 120;
 char bemf_timeout = 10;
 
@@ -374,7 +374,7 @@ typedef enum
   GPIO_PIN_SET
 }GPIO_PinState;
 
-uint16_t startup_max_duty_cycle = 300+200 + DEAD_TIME;
+uint16_t startup_max_duty_cycle = 300+400 + DEAD_TIME;
 uint16_t minimum_duty_cycle = DEAD_TIME;
 uint16_t stall_protect_minimum_duty = DEAD_TIME;
 char desync_check = 0;
@@ -640,7 +640,7 @@ void loadEEpromSettings(){
 	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }else{*/
-	    	min_startup_duty = 150+200;
+	    	min_startup_duty = 150+400;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 		stall_protect_minimum_duty = minimum_duty_cycle+10;
 	  // }
@@ -708,10 +708,10 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = eepromBuffer[25] +200+ dead_time_override;
+	   min_startup_duty = eepromBuffer[25] +400+ dead_time_override;
 	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
-	   startup_max_duty_cycle = startup_max_duty_cycle+200  + dead_time_override;
+	   startup_max_duty_cycle = startup_max_duty_cycle+400  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
 	   }
 	   
