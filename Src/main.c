@@ -616,7 +616,7 @@ void loadEEpromSettings(){
 	    	advance_level = 2;  // * 7.5 increments
 	    }
 
-	   if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
+	  /* if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
 		   if(eepromBuffer[24] < 49 && eepromBuffer[24] > 23){
 			   TIMER1_MAX_ARR = map (eepromBuffer[24], 24, 48, TIM1_AUTORELOAD,TIM1_AUTORELOAD/2);
 		   }
@@ -629,31 +629,32 @@ void loadEEpromSettings(){
 		   TIM1->ARR = TIMER1_MAX_ARR;
 		   throttle_max_at_high_rpm = TIMER1_MAX_ARR;
 		   duty_cycle_maximum = TIMER1_MAX_ARR;
-	    }else{
+	    }else{*/
 	    	tim1_arr = TIM1_AUTORELOAD;
 	    	TIM1->ARR = tim1_arr;
-	    }
+		duty_cycle_maximum =tim1_arr;
+	   // }
 
-	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
+	  /* if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
 	   min_startup_duty = (eepromBuffer[25] + DEAD_TIME) * TIMER1_MAX_ARR / 2000;
 	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
-	    }else{
-	    	min_startup_duty = 150;
+	    }else{*/
+	    	min_startup_duty = 500;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
-	    }
+	   // }
       motor_kv =4150  + 20;
       motor_poles = 2;
-	   if(eepromBuffer[28] == 0x01){
+	 /*  if(eepromBuffer[28] == 0x01){
 		   brake_on_stop = 1;
-	    }else{
-	    	brake_on_stop = 0;
-	    }
-	  /* if(eepromBuffer[29] == 0x01){
-		   stall_protection = 1;
 	    }else{*/
-	    	stall_protection = 0;
+	    	brake_on_stop = 0;
 	   // }
+	   //if(eepromBuffer[29] == 0x01){
+		   stall_protection = 1;
+	   /* }else{
+	    	stall_protection = 0;
+	    }*/
 	   setVolume(5);
 	   if(eepromBuffer[1] > 0){             // these commands weren't introduced until eeprom version 1.
 
@@ -706,8 +707,8 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = eepromBuffer[25] + dead_time_override;
-	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
+	   min_startup_duty = 500 + dead_time_override;
+	   minimum_duty_cycle = 500/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
@@ -763,7 +764,7 @@ void loadEEpromSettings(){
 	   low_rpm_level  = motor_kv / 100 / (32 / motor_poles);
 	   high_rpm_level = motor_kv / 17 / (32/motor_poles);
 	   }
-//	   reverse_speed_threshold =  map(motor_kv, 300, 3000, 2500 , 1250);
+//	   reverse_speed_threshold =  map(motor_kv, 500, 5000, 2500 , 1250);
 	   reverse_speed_threshold = 200;
 	if(!comp_pwm){
 		bi_direction = 0;
