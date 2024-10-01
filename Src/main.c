@@ -708,10 +708,10 @@ duty_cycle_maximum =tim1_arr;
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = eepromBuffer[25] +200+ dead_time_override;
+	   min_startup_duty = eepromBuffer[25] + dead_time_override;
 	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
-	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
+	   startup_max_duty_cycle = startup_max_duty_cycle  +200+ dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
 	   }
 	   
