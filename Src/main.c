@@ -616,7 +616,7 @@ void loadEEpromSettings(){
 	    	advance_level = 2;  // * 7.5 increments
 	    }
 
-	  if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
+	 /* if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
 		   if(eepromBuffer[24] < 49 && eepromBuffer[24] > 23){
 			   TIMER1_MAX_ARR = map (eepromBuffer[24], 24, 48, TIM1_AUTORELOAD,TIM1_AUTORELOAD/2);
 		   }
@@ -629,21 +629,21 @@ void loadEEpromSettings(){
 		   TIM1->ARR = TIMER1_MAX_ARR;
 		   throttle_max_at_high_rpm = TIMER1_MAX_ARR;
 		   duty_cycle_maximum = TIMER1_MAX_ARR;
-	    }/*else{
+	    }else{*/
 	    	tim1_arr = TIM1_AUTORELOAD;
 	    	TIM1->ARR = tim1_arr;
-duty_cycle_maximum =tim1_arr;
-	  //  }*/
+		duty_cycle_maximum =tim1_arr;
+	  //  }
 
-	  if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
+	 /* if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
 	   min_startup_duty = (eepromBuffer[25] +200+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
 	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
-	    }/*else{
+	    }else{*/
 	    	min_startup_duty = 150+200;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 		stall_protect_minimum_duty = minimum_duty_cycle+10;
-	   }*/
+	  // }
       motor_kv = (eepromBuffer[26] * 40) + 20;
       motor_poles = eepromBuffer[27];
 	   if(eepromBuffer[28] == 0x01){
