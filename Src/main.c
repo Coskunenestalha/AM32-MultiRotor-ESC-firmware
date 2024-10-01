@@ -231,11 +231,11 @@ uint32_t MINIMUM_RPM_SPEED_CONTROL = 500;
  };
 
  fastPID currentPid = {   // 1khz loop time
- 		.Kp = 800,
+ 		.Kp = 1000,
  		.Ki = 0,
- 		.Kd = 1000,
+ 		.Kd = 800,
  		.integral_limit = 20000,
- 		.output_limit = 100000
+ 		.output_limit = 120000
  };
 
  fastPID stallPid = {          //1khz loop time
