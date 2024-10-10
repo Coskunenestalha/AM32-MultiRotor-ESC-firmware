@@ -605,11 +605,11 @@ void loadEEpromSettings(){
 	    }else{
 	    	VARIABLE_PWM = 0;
 	    }
-	   if(eepromBuffer[22] == 0x01){
+	   /*if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{
+	    }else{*/
 	    	stuck_rotor_protection = 0;
-	    }
+	    //}
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
@@ -672,11 +672,11 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		   if(eepromBuffer[36] == 0x01){
+		 /*  if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
-		   }else{
+		   }else{*/
 			   LOW_VOLTAGE_CUTOFF = 0;
-		   }
+		  // }
 
 		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
 		   if(eepromBuffer[38] == 0x01){
@@ -1597,7 +1597,7 @@ loadEEpromSettings();
 		comp_pwm = 0;
       	stuck_rotor_protection = 0;
 		minimum_duty_cycle = minimum_duty_cycle + 50;
-		stall_protect_minimum_duty = stall_protect_minimum_duty + 50;
+		stall_protect_minimum_duty = stall_protect_minimum_duty + 100;
 		min_startup_duty = min_startup_duty + 50;
 	}
 
