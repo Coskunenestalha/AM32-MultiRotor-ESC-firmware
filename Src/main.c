@@ -355,7 +355,7 @@ int16_t actual_current = 0;
 char lowkv = 0;
 
 uint16_t min_startup_duty = 120+400;
-uint16_t sin_mode_min_s_d = 120;
+uint16_t sin_mode_min_s_d = 400;
 char bemf_timeout = 10;
 
 char startup_boost = 50;
@@ -376,7 +376,7 @@ typedef enum
 
 uint16_t startup_max_duty_cycle = 300+100 + DEAD_TIME;
 uint16_t minimum_duty_cycle = DEAD_TIME;
-uint16_t stall_protect_minimum_duty = DEAD_TIME;
+uint16_t stall_protect_minimum_duty = 100;
 char desync_check = 0;
 char low_kv_filter_level = 20;
 
@@ -632,15 +632,16 @@ void loadEEpromSettings(){
 	    }else{*/
 	    	tim1_arr = TIM1_AUTORELOAD;
 	    	TIM1->ARR = tim1_arr;
+		throttle_max_at_high_rpm = tim1_arr;
 		duty_cycle_maximum =tim1_arr;
 	  //  }
 
 	 /* if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = (eepromBuffer[25] +300+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
-	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
-	   stall_protect_minimum_duty = minimum_duty_cycle+10;
+	   min_startup_duty = (400+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
+	   minimum_duty_cycle = (400/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
+	   stall_protect_minimum_duty = minimum_duty_cycle+30;
 	    }else{*/
-	    	min_startup_duty = 150+400;
+	    	min_startup_duty = 150+250;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 		stall_protect_minimum_duty = minimum_duty_cycle+10;
 	  // }
@@ -674,11 +675,11 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		   if(eepromBuffer[36] == 0x01){
+		  /* if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
-		   }else{
+		   }else{*/
 			   LOW_VOLTAGE_CUTOFF = 0;
-		   }
+		  // }
 
 		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
 		   if(eepromBuffer[38] == 0x01){
@@ -708,10 +709,10 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = eepromBuffer[25] +400+ dead_time_override;
-	   minimum_duty_cycle = eepromBuffer[25]/2 +200+ dead_time_override;
+	   min_startup_duty =  400+ dead_time_override;
+	   minimum_duty_cycle = 400/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
-	   startup_max_duty_cycle = startup_max_duty_cycle+100  + dead_time_override;
+	   startup_max_duty_cycle = startup_max_duty_cycle+300  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
 	   }
 	   
@@ -1600,7 +1601,7 @@ loadEEpromSettings();
       	stuck_rotor_protection = 0;
 		minimum_duty_cycle = minimum_duty_cycle + 50;
 		stall_protect_minimum_duty = stall_protect_minimum_duty + 50;
-		min_startup_duty = min_startup_duty + 50;
+		min_startup_duty = min_startup_duty + 75;
 	}
 
 #ifdef MCU_F031
