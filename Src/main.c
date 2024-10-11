@@ -292,7 +292,7 @@ uint8_t servo_dead_band = 100;
 
 //========================= Battery Cuttoff Settings ========================
 char LOW_VOLTAGE_CUTOFF = 0;		// Turn Low Voltage CUTOFF on or off
-uint16_t low_cell_volt_cutoff = 330;	// 3.3volts per cell
+uint16_t low_cell_volt_cutoff = 300;	// 3.3volts per cell
 
 //=========================== END EEPROM Defaults ===========================
 
@@ -678,7 +678,7 @@ void loadEEpromSettings(){
 			   LOW_VOLTAGE_CUTOFF = 0;
 		  // }
 
-		   low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
+		  // low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
 		   if(eepromBuffer[38] == 0x01){
 			   RC_CAR_REVERSE = 1;
 		   }else{
