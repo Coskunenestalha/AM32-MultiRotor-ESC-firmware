@@ -354,8 +354,8 @@ int16_t actual_current = 0;
 
 char lowkv = 0;
 
-uint16_t min_startup_duty = 1500;
-uint16_t sin_mode_min_s_d = 1500;
+uint16_t min_startup_duty = 1900;
+uint16_t sin_mode_min_s_d = 1900;
 char bemf_timeout = 10;
 
 char startup_boost = 50;
@@ -374,9 +374,9 @@ typedef enum
   GPIO_PIN_SET
 }GPIO_PinState;
 
-uint16_t startup_max_duty_cycle = 1500 + DEAD_TIME;
-uint16_t minimum_duty_cycle = 800+DEAD_TIME;
-uint16_t stall_protect_minimum_duty =600+ DEAD_TIME;
+uint16_t startup_max_duty_cycle = 1900 + DEAD_TIME;
+uint16_t minimum_duty_cycle = 1100+DEAD_TIME;
+uint16_t stall_protect_minimum_duty =1000+ DEAD_TIME;
 char desync_check = 0;
 char low_kv_filter_level = 20;
 
@@ -385,7 +385,7 @@ uint16_t TIMER1_MAX_ARR = TIM1_AUTORELOAD;      // maximum auto reset register v
 uint16_t duty_cycle_maximum = TIM1_AUTORELOAD;     //restricted by temperature or low rpm throttle protect
 uint16_t low_rpm_level  = 20;        // thousand erpm used to set range for throttle resrictions
 uint16_t high_rpm_level = 70;      //
-uint16_t throttle_max_at_low_rpm  = 1000;
+uint16_t throttle_max_at_low_rpm  = 700;
 uint16_t throttle_max_at_high_rpm = TIM1_AUTORELOAD;
 
 uint16_t commutation_intervals[6] = {0};
@@ -635,12 +635,12 @@ void loadEEpromSettings(){
 	    }
 
 	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = 1500 * TIMER1_MAX_ARR / 2000;
+	   min_startup_duty = 1900 * TIMER1_MAX_ARR / 2000;
 	   minimum_duty_cycle = (800/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
-	   stall_protect_minimum_duty = minimum_duty_cycle+200;
+	   stall_protect_minimum_duty = minimum_duty_cycle+800;
 	    }else{
-	    	min_startup_duty = 1500;
-	    	minimum_duty_cycle = (800 / 2) + 100;
+	    	min_startup_duty = 1900;
+	    	minimum_duty_cycle = (800 / 2) + 800;
 	    }
       motor_kv = (eepromBuffer[26] * 40) + 20;
       motor_poles = eepromBuffer[27];
@@ -667,7 +667,7 @@ void loadEEpromSettings(){
 		   }else{
 			   TLM_ON_INTERVAL = 0;
 		   }
-		   servo_low_threshold = (eepromBuffer[32]*2) + 750; // anything below this point considered 0
+		   servo_low_threshold = (eepromBuffer[32]*2) + 550; // anything below this point considered 0
 		   servo_high_threshold = (eepromBuffer[33]*2) + 1750;;  // anything above this point considered 2000 (max)
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
@@ -706,7 +706,7 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = 1500 + dead_time_override;
+	   min_startup_duty = 1900 + dead_time_override;
 	   minimum_duty_cycle = 800/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
