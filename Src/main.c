@@ -278,7 +278,7 @@ uint16_t CURRENT_LIMIT = 202;
 uint8_t sine_mode_power = 5;
 char drag_brake_strength = 10;		// Drag Brake Power when brake on stop is enabled
 uint8_t driving_brake_strength = 10;
-uint8_t dead_time_override = DEAD_TIME+45;
+uint8_t dead_time_override = DEAD_TIME;
 char sine_mode_changeover_thottle_level = 5;	// Sine Startup Range
 uint16_t stall_protect_target_interval = TARGET_STALL_PROTECTION_INTERVAL;
 char USE_HALL_SENSOR = 0;
@@ -710,7 +710,7 @@ void loadEEpromSettings(){
 	   minimum_duty_cycle = 1600/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
-	   TIM1->BDTR |= dead_time_override+45;
+	   TIM1->BDTR |= dead_time_override;
 	   }
 	   
 	   if(eepromBuffer[43] >= 70 && eepromBuffer[43] <= 140){ 
