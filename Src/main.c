@@ -631,11 +631,11 @@ duty_cycle_maximum = TI  ;
 		servo_neutral = (eepromBuffer[34]) + 1374;
 		servo_dead_band = eepromBuffer[35];
 
-		/*if (eepromBuffer[36] == 0x01) {
+		if (eepromBuffer[36] == 0x01) {
 			LOW_VOLTAGE_CUTOFF = 1;
-		} else {*/
+		} else {
 			LOW_VOLTAGE_CUTOFF = 0;
-		//}
+		}
 
 		low_cell_volt_cutoff = eepromBuffer[37] + 250; // 2.5 to 3.5 volts per cell range
 		if (eepromBuffer[38] == 0x01) {
