@@ -354,8 +354,8 @@ int16_t actual_current = 0;
 
 char lowkv = 0;
 
-uint16_t min_startup_duty = 1000;
-uint16_t sin_mode_min_s_d = 1000;
+uint16_t min_startup_duty = 1800;
+uint16_t sin_mode_min_s_d = 1800;
 char bemf_timeout = 10;
 
 char startup_boost = 100;
@@ -374,8 +374,8 @@ typedef enum
   GPIO_PIN_SET
 }GPIO_PinState;
 
-uint16_t startup_max_duty_cycle = 1000 + DEAD_TIME;
-uint16_t minimum_duty_cycle = 500+DEAD_TIME;
+uint16_t startup_max_duty_cycle = 1900 + DEAD_TIME;
+uint16_t minimum_duty_cycle = 1000+DEAD_TIME;
 uint16_t stall_protect_minimum_duty = DEAD_TIME+45;
 char desync_check = 0;
 char low_kv_filter_level = 20;
@@ -635,11 +635,11 @@ void loadEEpromSettings(){
 	    }
 
 	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = (1000+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
-	   minimum_duty_cycle = (1000/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
+	   min_startup_duty = (1800+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
+	   minimum_duty_cycle = (1800/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }else{
-	    	min_startup_duty = 1000;
+	    	min_startup_duty = 1800;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
       motor_kv = (eepromBuffer[26] * 40) + 20;
@@ -672,7 +672,7 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		  /* if(eepromBuffer[36] == 0x01){
+		   /*if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
 		   }else{*/
 			   LOW_VOLTAGE_CUTOFF = 0;
@@ -702,12 +702,12 @@ void loadEEpromSettings(){
 	   
 	   if(eepromBuffer[42] > 0 && eepromBuffer[42] < 10){        // motor brake 1-9
        driving_brake_strength = eepromBuffer[42];
-	   /*dead_time_override = DEAD_TIME + (150 - (driving_brake_strength * 10));
-	   if(dead_time_override > 200){*/
-	   dead_time_override = 300;
-	   //}
-	   min_startup_duty = 1000 + dead_time_override;
-	   minimum_duty_cycle = 1000/2 + dead_time_override;
+	   dead_time_override = DEAD_TIME + (150 - (driving_brake_strength * 10));
+	   if(dead_time_override > 200){
+	   dead_time_override = 200;
+	   }
+	   min_startup_duty = 1800 + dead_time_override;
+	   minimum_duty_cycle = 1800/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override+45;
