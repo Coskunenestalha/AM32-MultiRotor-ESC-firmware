@@ -702,10 +702,10 @@ void loadEEpromSettings(){
 	   
 	   if(eepromBuffer[42] > 0 && eepromBuffer[42] < 10){        // motor brake 1-9
        driving_brake_strength = eepromBuffer[42];
-	   dead_time_override = DEAD_TIME + (150 - (driving_brake_strength * 10));
-	   if(dead_time_override > 200){
-	   dead_time_override = 200;
-	   }
+	   /*dead_time_override = DEAD_TIME + (150 - (driving_brake_strength * 10));
+	   if(dead_time_override > 200){*/
+	   dead_time_override = 300;
+	   //}
 	   min_startup_duty = 1000 + dead_time_override;
 	   minimum_duty_cycle = 1000/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
