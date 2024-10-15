@@ -710,7 +710,7 @@ void loadEEpromSettings(){
 	   minimum_duty_cycle = 1800/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
-	   TIM1->BDTR |= dead_time_override+45;
+	   TIM1->BDTR |= dead_time_override;
 	   }
 	   
 	   if(eepromBuffer[43] >= 70 && eepromBuffer[43] <= 140){ 
