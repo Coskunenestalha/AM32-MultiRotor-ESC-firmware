@@ -278,7 +278,7 @@ uint16_t CURRENT_LIMIT = 202;
 uint8_t sine_mode_power = 5;
 char drag_brake_strength = 10;		// Drag Brake Power when brake on stop is enabled
 uint8_t driving_brake_strength = 10;
-uint8_t dead_time_override = DEAD_TIME;
+uint8_t dead_time_override = DEAD_TIME+45;
 char sine_mode_changeover_thottle_level = 5;	// Sine Startup Range
 uint16_t stall_protect_target_interval = TARGET_STALL_PROTECTION_INTERVAL;
 char USE_HALL_SENSOR = 0;
@@ -354,11 +354,11 @@ int16_t actual_current = 0;
 
 char lowkv = 0;
 
-uint16_t min_startup_duty = 120;
-uint16_t sin_mode_min_s_d = 120;
+uint16_t min_startup_duty = 1000;
+uint16_t sin_mode_min_s_d = 1000;
 char bemf_timeout = 10;
 
-char startup_boost = 50;
+char startup_boost = 100;
 char reversing_dead_band = 1;
 
 uint16_t low_pin_count = 0;
@@ -374,9 +374,9 @@ typedef enum
   GPIO_PIN_SET
 }GPIO_PinState;
 
-uint16_t startup_max_duty_cycle = 300 + DEAD_TIME;
-uint16_t minimum_duty_cycle = DEAD_TIME;
-uint16_t stall_protect_minimum_duty = DEAD_TIME;
+uint16_t startup_max_duty_cycle = 1000 + DEAD_TIME;
+uint16_t minimum_duty_cycle = 500+DEAD_TIME;
+uint16_t stall_protect_minimum_duty = DEAD_TIME+45;
 char desync_check = 0;
 char low_kv_filter_level = 20;
 
@@ -635,11 +635,11 @@ void loadEEpromSettings(){
 	    }
 
 	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = (eepromBuffer[25] + DEAD_TIME) * TIMER1_MAX_ARR / 2000;
-	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
+	   min_startup_duty = (1000+ DEAD_TIME) * TIMER1_MAX_ARR / 2000;
+	   minimum_duty_cycle = (1000/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }else{
-	    	min_startup_duty = 150;
+	    	min_startup_duty = 1000;
 	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
       motor_kv = (eepromBuffer[26] * 40) + 20;
@@ -706,11 +706,11 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = eepromBuffer[25] + dead_time_override;
-	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
+	   min_startup_duty = 1000 + dead_time_override;
+	   minimum_duty_cycle = 1000/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
-	   TIM1->BDTR |= dead_time_override;
+	   TIM1->BDTR |= dead_time_override+45;
 	   }
 	   
 	   if(eepromBuffer[43] >= 70 && eepromBuffer[43] <= 140){ 
