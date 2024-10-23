@@ -613,7 +613,7 @@ void loadEEpromSettings(){
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
-	    	advance_level = 7.5;  // * 7.5 increments
+	    	advance_level = 1;  // * 7.5 increments
 	    }
 
 	   if(eepromBuffer[24] < 49 && eepromBuffer[24] > 7){
