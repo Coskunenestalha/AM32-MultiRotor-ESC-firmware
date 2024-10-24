@@ -1088,8 +1088,8 @@ if(!armed && (cell_count == 0)){
 
 		  	 if(stall_protection && running ){  // this boosts throttle as the rpm gets lower, for crawlers and rc cars only, do not use for multirotors.
 		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
-		  					 if(stall_protection_adjust > 2100){
-		  						stall_protection_adjust = 2100;
+		  					 if(stall_protection_adjust > 2000){
+		  						stall_protection_adjust = 2000;
 		  					 }
 		  					 if(stall_protection_adjust <= 0){
 		  						stall_protection_adjust = 0;
