@@ -724,7 +724,7 @@ void loadEEpromSettings(){
 	   
 	   }
 	   if(eepromBuffer[45] > 0 && eepromBuffer[45] < 11){ 
-	   sine_mode_power = 20;
+	   sine_mode_power = 30;
 	   }
 
 
