@@ -72,7 +72,7 @@
  * --added startup check for continuous high signal, reboot to enter bootloader.
  *-- added brake on stop from eeprom
  *-- added stall protection from eeprom
- *-- added motor pole divider for usoidal and low rpm power protection
+ *-- added motor pole divider for sinusoidal and low rpm power protection
  *-- fixed dshot commands, added confirmation beeps and removed blocking behavior
  *--
  *1.65
@@ -106,10 +106,10 @@
  *1.71 fix dshot for Ardupilot / Px4 FC
  *1.72 Fix telemetry output and add 1 second arming.
  *1.73 Fix false arming if no signal. Remove low rpm throttle protection below 300kv
- *1.74 Add e Mode range and drake brake strength adjustment
+ *1.74 Add Sine Mode range and drake brake strength adjustment
  *1.75 Disable brake on stop for PWM_ENABLE_BRIDGE 
 	   Removed automatic brake on stop on neutral for RC car proportional brake.
-	   Adjust e speed and stall protection speed to more closely match
+	   Adjust sine speed and stall protection speed to more closely match
 	   makefile fixes from Cruwaller 
 	   Removed gd32 build, until firmware is functional
  *1.76 Adjust g071 PWM frequency, and startup power to be same frequency as f051. 
@@ -123,8 +123,8 @@
  *1.80 -Enable Comparator blanking for g071 on timer 1 channel 4
 	   -add hardware group F for Iflight Blitz
 	   -adjust parameters for pwm frequency
-	   -add e mode power variable and eeprom setting
-	   -fix telemetry rpm during e mode
+	   -add sine mode power variable and eeprom setting
+	   -fix telemetry rpm during sine mode
 	   -fix sounds for extended pwm range
 	   -Add adjustable braking strength when driving
  *1.81 -Add current limiting PID loop
@@ -136,8 +136,8 @@
 	   -doubled filter length for motors under 900kv
 *1.82  -Add speed control pid loop.
 *1.83  -Add stall protection pid loop.
-  	   -Improve e mode transition.
-  	   -decrease speed step re-entering e mode
+  	   -Improve sine mode transition.
+  	   -decrease speed step re-entering sine mode
   	   -added fixed duty cycle and speed mode build option
   	   -added rpm_controlled by input signal ( to be added to config tool )
 *1.84  -Change PID value to int for faster calculations
@@ -145,9 +145,9 @@
 	   -Add current limit max duty cycle
 *1.85  -fix current limit not allowing full rpm on g071 or low pwm frequency
 		-remove unused brake on stop conditional 
-*1.86  - create do-once in e mode instead of setting pwm mode each time.
+*1.86  - create do-once in sine mode instead of setting pwm mode each time.
 *1.87  - fix fixed mode max rpm limits
-*1.88  - Fix stutter on e mode re-entry due to position reset
+*1.88  - Fix stutter on sine mode re-entry due to position reset
 *1.89  - Fix drive by rpm mode scaling.
  	   - Fix dshot px4 timings
 *1.90  - Disable comp interrupts for brushed mode
@@ -202,16 +202,16 @@
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 00
 
-//firmware build options !! fixed speed and duty cycle modes are not to be used with usoidal startup !!
+//firmware build options !! fixed speed and duty cycle modes are not to be used with sinusoidal startup !!
 
 //#define FIXED_DUTY_MODE  // bypasses signal input and arming, uses a set duty cycle. For pumps, slot cars etc
 //#define FIXED_DUTY_MODE_POWER 100     // 0-100 percent not used in fixed speed mode
 
-//#define FIXED_SPEED_MODE  // bypasses input signal and runs at a fixed rpm ug the speed control loop PID
+//#define FIXED_SPEED_MODE  // bypasses input signal and runs at a fixed rpm using the speed control loop PID
 //#define FIXED_SPEED_MODE_RPM  1000  // intended final rpm , ensure pole pair numbers are entered correctly in config tool.
 
 //#define BRUSHED_MODE         // overrides all brushless config settings, enables two channels for brushed control
-//#define GIMBAL_MODE     // also usoidal_startup needs to be on, maps input to usoidal angle.
+//#define GIMBAL_MODE     // also sinusoidal_startup needs to be on, maps input to sinusoidal angle.
 
 //===========================================================================
 //=============================  Defaults =============================
@@ -267,7 +267,7 @@ char bi_direction = 0;
 char stuck_rotor_protection = 1;	// Turn off for Crawlers
 char brake_on_stop = 0;
 char stall_protection = 0;
-char use__start = 0;
+char use_sin_start = 0;
 char TLM_ON_INTERVAL = 0;
 uint8_t telemetry_interval_ms = 30;
 uint8_t TEMPERATURE_LIMIT = 255;  // degrees 255 to disable
@@ -275,7 +275,7 @@ char advance_level = 2;			// 7.5 degree increments 0 , 7.5, 15, 22.5)
 uint16_t motor_kv = 2000;
 char motor_poles = 14;
 uint16_t CURRENT_LIMIT = 202;
-uint8_t e_mode_power = 5;
+uint8_t sine_mode_power = 5;
 char drag_brake_strength = 10;		// Drag Brake Power when brake on stop is enabled
 uint8_t driving_brake_strength = 10;
 uint8_t dead_time_override = DEAD_TIME;
