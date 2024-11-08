@@ -724,7 +724,7 @@ void loadEEpromSettings(){
 	   
 	   }
 	   if(eepromBuffer[45] > 0 && eepromBuffer[45] < 11){ 
-	   sine_mode_power = 100;
+	   sine_mode_power =eepromBuffer[45] ;
 	   }
 
 
@@ -1221,9 +1221,9 @@ if(!prop_brake_active){
 			}
 #else
 			if(average_interval > 300){
-				max_duty_cycle_change = RAMP_SPEED_LOW_RPM;
+				max_duty_cycle_change = 15;
 			}else{
-				max_duty_cycle_change = RAMP_SPEED_LOW_RPM * 3;
+				max_duty_cycle_change = 15 * 3;
 			}
 #endif				
 
