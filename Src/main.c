@@ -375,8 +375,8 @@ typedef enum
 }GPIO_PinState;
 
 uint16_t startup_max_duty_cycle = 1800 + DEAD_TIME;
-uint16_t minimum_duty_cycle = 500+DEAD_TIME;
-uint16_t stall_protect_minimum_duty =45+ DEAD_TIME;
+uint16_t minimum_duty_cycle = DEAD_TIME;
+uint16_t stall_protect_minimum_duty = DEAD_TIME;
 char desync_check = 0;
 char low_kv_filter_level = 20;
 
@@ -385,7 +385,7 @@ uint16_t TIMER1_MAX_ARR = TIM1_AUTORELOAD;      // maximum auto reset register v
 uint16_t duty_cycle_maximum = TIM1_AUTORELOAD;     //restricted by temperature or low rpm throttle protect
 uint16_t low_rpm_level  = 20;        // thousand erpm used to set range for throttle resrictions
 uint16_t high_rpm_level = 70;      //
-uint16_t throttle_max_at_low_rpm  = 1000;
+uint16_t throttle_max_at_low_rpm  = 400;
 uint16_t throttle_max_at_high_rpm = TIM1_AUTORELOAD;
 
 uint16_t commutation_intervals[6] = {0};
@@ -605,11 +605,11 @@ void loadEEpromSettings(){
 	    }else{
 	    	VARIABLE_PWM = 0;
 	    }
-	   /*if(eepromBuffer[22] == 0x01){
+	   if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{*/
+	    }else{
 	    	stuck_rotor_protection = 0;
-	    //}
+	    }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
@@ -635,12 +635,12 @@ void loadEEpromSettings(){
 	    }
 
 	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = 1750 * TIMER1_MAX_ARR / 2000;
-	   minimum_duty_cycle = (600/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
+	   min_startup_duty = (1750 + DEAD_TIME) * TIMER1_MAX_ARR / 2000;
+	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }else{
 	    	min_startup_duty = 1750;
-	    	minimum_duty_cycle = (600 / 2) + 10;
+	    	minimum_duty_cycle = (300 / 2) + 10;
 	    }
       motor_kv = (eepromBuffer[26] * 40) + 20;
       motor_poles = eepromBuffer[27];
@@ -672,7 +672,7 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		 /*  if(eepromBuffer[36] == 0x01){
+		  /* if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
 		   }else{*/
 			   LOW_VOLTAGE_CUTOFF = 0;
@@ -707,7 +707,7 @@ void loadEEpromSettings(){
 	   dead_time_override = 200;
 	   }
 	   min_startup_duty = 1750 + dead_time_override;
-	   minimum_duty_cycle = 600/2 + dead_time_override;
+	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
@@ -1088,8 +1088,8 @@ if(!armed && (cell_count == 0)){
 
 		  	 if(stall_protection && running ){  // this boosts throttle as the rpm gets lower, for crawlers and rc cars only, do not use for multirotors.
 		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
-		  					 if(stall_protection_adjust > 500){
-		  						stall_protection_adjust = 550;
+		  					 if(stall_protection_adjust > 2000){
+		  						stall_protection_adjust = 2000;
 		  					 }
 		  					 if(stall_protection_adjust <= 0){
 		  						stall_protection_adjust = 0;
