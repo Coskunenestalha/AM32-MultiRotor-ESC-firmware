@@ -1221,9 +1221,9 @@ if(!prop_brake_active){
 			}
 #else
 			if(average_interval > 300){
-				max_duty_cycle_change = 15;
+				max_duty_cycle_change = 20;
 			}else{
-				max_duty_cycle_change = 15 * 3;
+				max_duty_cycle_change = 20 * 3;
 			}
 #endif				
 
