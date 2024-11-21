@@ -891,7 +891,7 @@ void commutate(){
 
 	changeCompInput();
 
-if(average_interval > 2000 && (stall_protection || RC_CAR_REVERSE)){
+if(average_interval > 2000 && (0 || RC_CAR_REVERSE)){
 	old_routine = 1;
 }
 	bemfcounter = 0;
@@ -1074,7 +1074,7 @@ if(!armed && (cell_count == 0)){
   	  }else{
 	 	 duty_cycle = map(input, 47, 2047, minimum_duty_cycle, TIMER1_MAX_ARR);
 	  }
-	  if(tenkhzcounter%10 == 0 && tenkhzcounter >12000 ){     // 1khz PID loop
+	  if(tenkhzcounter%10 == 0 && tenkhzcounter >6000 ){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
@@ -1411,7 +1411,7 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
     bad_count = 0;
 
     zero_crosses++;
-    if(stall_protection || RC_CAR_REVERSE){
+    if(0 || RC_CAR_REVERSE){
    	 if (zero_crosses >= 20 && commutation_interval <= 2000) {
    	    	old_routine = 0;
    	    	enableCompInterrupts();          // enable interrupt
