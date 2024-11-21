@@ -891,7 +891,7 @@ void commutate(){
 
 	changeCompInput();
 
-if(average_interval > 2000 && (0 || RC_CAR_REVERSE)){
+if(average_interval > 2000 && (stall_protection || RC_CAR_REVERSE)){
 	old_routine = 1;
 }
 	bemfcounter = 0;
@@ -988,7 +988,7 @@ void tenKhzRoutine(){
 
 
 	tenkhzcounter++;
-	/*if(tenkhzcounter > 10000){      // 1s sample interval 10000
+	if(tenkhzcounter%10000 ==0){      // 1s sample interval 10000
 		consumed_current = (float)actual_current/360 + consumed_current;
 					switch (dshot_extended_telemetry){
 
@@ -1007,8 +1007,8 @@ void tenKhzRoutine(){
 
 					}
 
-		tenkhzcounter = 0;
-	}*/
+		
+	}
 if(!armed && (cell_count == 0)){
 	if(inputSet){
 		if(adjusted_input == 0){
@@ -1074,7 +1074,41 @@ if(!armed && (cell_count == 0)){
   	  }else{
 	 	 duty_cycle = map(input, 47, 2047, minimum_duty_cycle, TIMER1_MAX_ARR);
 	  }
-	  if(tenkhzcounter%10 == 0 && tenkhzcounter >6000 ){     // 1khz PID loop
+	  if(tenkhzcounter%10 == 0 && tenkhzcounter < 60000 ){     // 1khz PID loop
+		  if(use_current_limit && running){
+			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
+			if(use_current_limit_adjust < minimum_duty_cycle){
+				use_current_limit_adjust = minimum_duty_cycle;
+			}
+			if(use_current_limit_adjust > duty_cycle){
+				use_current_limit_adjust = duty_cycle;
+			}
+
+	  }
+
+		  	 if(stall_protection && running ){  // this boosts throttle as the rpm gets lower, for crawlers and rc cars only, do not use for multirotors.
+		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
+		  					 if(stall_protection_adjust > 150){
+		  						stall_protection_adjust = 150;
+		  					 }
+		  					 if(stall_protection_adjust <= 0){
+		  						stall_protection_adjust = 0;
+		  					 }
+		  	 }
+//			  if(use_speed_control_loop && running){
+//			  input_override += doPidCalculations(&speedPid, e_com_time, target_e_com_time)/10000;
+//			  if(input_override > 2047){
+//				  input_override = 2047;
+//			  }
+//			  if(input_override < 0){
+//				  input_override = 0;
+//			  }
+//			  if(zero_crosses < 100){
+//				  speedPid.integral = 0;
+//			  }
+//		}
+	  }
+		  else if(tenkhzcounter%10 == 0){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
@@ -1411,7 +1445,7 @@ void zcfoundroutine(){   // only used in polling mode, blocking routine.
     bad_count = 0;
 
     zero_crosses++;
-    if(0 || RC_CAR_REVERSE){
+    if(stall_protection || RC_CAR_REVERSE){
    	 if (zero_crosses >= 20 && commutation_interval <= 2000) {
    	    	old_routine = 0;
    	    	enableCompInterrupts();          // enable interrupt
