@@ -355,11 +355,11 @@ int16_t actual_current = 0;
 
 char lowkv = 0;
 
-uint16_t min_startup_duty = 1750;
-uint16_t sin_mode_min_s_d = 1750;
+uint16_t min_startup_duty = 120;
+uint16_t sin_mode_min_s_d = 120;
 char bemf_timeout = 10;
 
-char startup_boost = 150;
+char startup_boost = 50;
 char reversing_dead_band = 1;
 
 uint16_t low_pin_count = 0;
@@ -375,9 +375,9 @@ typedef enum
   GPIO_PIN_SET
 }GPIO_PinState;
 
-uint16_t startup_max_duty_cycle = 1800 + DEAD_TIME;
-uint16_t minimum_duty_cycle = 500+DEAD_TIME;
-uint16_t stall_protect_minimum_duty =45+ DEAD_TIME;
+uint16_t startup_max_duty_cycle = 300 + DEAD_TIME;
+uint16_t minimum_duty_cycle = DEAD_TIME;
+uint16_t stall_protect_minimum_duty = DEAD_TIME;
 char desync_check = 0;
 char low_kv_filter_level = 20;
 
@@ -386,7 +386,7 @@ uint16_t TIMER1_MAX_ARR = TIM1_AUTORELOAD;      // maximum auto reset register v
 uint16_t duty_cycle_maximum = TIM1_AUTORELOAD;     //restricted by temperature or low rpm throttle protect
 uint16_t low_rpm_level  = 20;        // thousand erpm used to set range for throttle resrictions
 uint16_t high_rpm_level = 70;      //
-uint16_t throttle_max_at_low_rpm  = 1000;
+uint16_t throttle_max_at_low_rpm  = 400;
 uint16_t throttle_max_at_high_rpm = TIM1_AUTORELOAD;
 
 uint16_t commutation_intervals[6] = {0};
@@ -606,11 +606,11 @@ void loadEEpromSettings(){
 	    }else{
 	    	VARIABLE_PWM = 0;
 	    }
-	   /*if(eepromBuffer[22] == 0x01){
+	   if(eepromBuffer[22] == 0x01){
 		   stuck_rotor_protection = 1;
-	    }else{*/
+	    }else{
 	    	stuck_rotor_protection = 0;
-	    //}
+	    }
 	   if(eepromBuffer[23] < 4){
 		   advance_level = eepromBuffer[23];
 	    }else{
@@ -636,12 +636,12 @@ void loadEEpromSettings(){
 	    }
 
 	   if(eepromBuffer[25] < 151 && eepromBuffer[25] > 49){
-	   min_startup_duty = 1750 * TIMER1_MAX_ARR / 2000;
-	   minimum_duty_cycle = (1000/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
+	   min_startup_duty = (eepromBuffer[25] + DEAD_TIME) * TIMER1_MAX_ARR / 2000;
+	   minimum_duty_cycle = (eepromBuffer[25]/ 2 + DEAD_TIME/3) * TIMER1_MAX_ARR / 2000 ;
 	   stall_protect_minimum_duty = minimum_duty_cycle+10;
 	    }else{
-	    	min_startup_duty = 1750;
-	    	minimum_duty_cycle = (1000 / 2) + 10;
+	    	min_startup_duty = 150;
+	    	minimum_duty_cycle = (min_startup_duty / 2) + 10;
 	    }
       motor_kv = (eepromBuffer[26] * 40) + 20;
       motor_poles = eepromBuffer[27];
@@ -673,7 +673,7 @@ void loadEEpromSettings(){
 		   servo_neutral = (eepromBuffer[34]) + 1374;
 		   servo_dead_band = eepromBuffer[35];
 
-		 /*  if(eepromBuffer[36] == 0x01){
+		  /* if(eepromBuffer[36] == 0x01){
 			   LOW_VOLTAGE_CUTOFF = 1;
 		   }else{*/
 			   LOW_VOLTAGE_CUTOFF = 0;
@@ -707,8 +707,8 @@ void loadEEpromSettings(){
 	   if(dead_time_override > 200){
 	   dead_time_override = 200;
 	   }
-	   min_startup_duty = 1750 + dead_time_override;
-	   minimum_duty_cycle = 1000/2 + dead_time_override;
+	   min_startup_duty = eepromBuffer[25] + dead_time_override;
+	   minimum_duty_cycle = eepromBuffer[25]/2 + dead_time_override;
 	   throttle_max_at_low_rpm  = throttle_max_at_low_rpm + dead_time_override;
 	   startup_max_duty_cycle = startup_max_duty_cycle  + dead_time_override;
 	   TIM1->BDTR |= dead_time_override;
@@ -989,7 +989,7 @@ void tenKhzRoutine(){
 
 
 	tenkhzcounter++;
-	if(tenkhzcounter%10000 ==0){      // 1s sample interval 10000
+	if(tenkhzcounter %10000==0){      // 1s sample interval 10000
 		consumed_current = (float)actual_current/360 + consumed_current;
 					switch (dshot_extended_telemetry){
 
@@ -1075,7 +1075,8 @@ if(!armed && (cell_count == 0)){
   	  }else{
 	 	 duty_cycle = map(input, 47, 2047, minimum_duty_cycle, TIMER1_MAX_ARR);
 	  }
-	  if(tenkhzcounter%10 == 0 && tenkhzcounter < 60000 && tenk==0 ){     // 1khz PID loop
+	  
+	if(tenkhzcounter%10 == 0 && tenk==0){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
@@ -1090,7 +1091,8 @@ if(!armed && (cell_count == 0)){
 		  	 if(stall_protection && running ){  // this boosts throttle as the rpm gets lower, for crawlers and rc cars only, do not use for multirotors.
 		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
 		  					 if(stall_protection_adjust > 150){
-		  						stall_protection_adjust = 150;
+		  						stall_protection_adjust = 200;
+								 tenk=1;
 		  					 }
 		  					 if(stall_protection_adjust <= 0){
 		  						stall_protection_adjust = 0;
@@ -1109,8 +1111,42 @@ if(!armed && (cell_count == 0)){
 //			  }
 //		}
 	  }
-		  else if(tenkhzcounter%10 == 0){     // 1khz PID loop
-			  tenk=1;
+		else if(tenkhzcounter%10 == 0 && tenk==1){     // 1khz PID loop
+		  if(use_current_limit && running){
+			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
+			if(use_current_limit_adjust < minimum_duty_cycle){
+				use_current_limit_adjust = minimum_duty_cycle;
+			}
+			if(use_current_limit_adjust > duty_cycle){
+				use_current_limit_adjust = duty_cycle;
+			}
+
+	  }
+
+		  	 if(stall_protection && running ){  // this boosts throttle as the rpm gets lower, for crawlers and rc cars only, do not use for multirotors.
+		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
+		  					 if(stall_protection_adjust > 1000){
+		  						stall_protection_adjust = 1000;
+								 tenk=2;
+		  					 }
+		  					 if(stall_protection_adjust <= 0){
+		  						stall_protection_adjust = 0;
+		  					 }
+		  	 }
+//			  if(use_speed_control_loop && running){
+//			  input_override += doPidCalculations(&speedPid, e_com_time, target_e_com_time)/10000;
+//			  if(input_override > 2047){
+//				  input_override = 2047;
+//			  }
+//			  if(input_override < 0){
+//				  input_override = 0;
+//			  }
+//			  if(zero_crosses < 100){
+//				  speedPid.integral = 0;
+//			  }
+//		}
+	  }
+		  else if(tenkhzcounter%10 == 0 && tenk == 2){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
@@ -1126,6 +1162,7 @@ if(!armed && (cell_count == 0)){
 		  		 stall_protection_adjust += (doPidCalculations(&stallPid, commutation_interval, stall_protect_target_interval))/10000;
 		  					 if(stall_protection_adjust > 2000){
 		  						stall_protection_adjust = 2000;
+								 
 		  					 }
 		  					 if(stall_protection_adjust <= 0){
 		  						stall_protection_adjust = 0;
