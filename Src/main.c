@@ -348,6 +348,7 @@ char cell_count = 0;
 char brushed_direction_set = 0;
 
 uint16_t tenkhzcounter = 0;
+uint16_t tenk = 0;
 float consumed_current = 0;
 int32_t smoothed_raw_current = 0;
 int16_t actual_current = 0;
@@ -1074,7 +1075,7 @@ if(!armed && (cell_count == 0)){
   	  }else{
 	 	 duty_cycle = map(input, 47, 2047, minimum_duty_cycle, TIMER1_MAX_ARR);
 	  }
-	  if(tenkhzcounter%10 == 0 && tenkhzcounter < 30000 ){     // 1khz PID loop
+	  if(tenkhzcounter%10 == 0 && tenkhzcounter < 60000 && tenk==0 ){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
@@ -1109,6 +1110,7 @@ if(!armed && (cell_count == 0)){
 //		}
 	  }
 		  else if(tenkhzcounter%10 == 0){     // 1khz PID loop
+			  tenk=1;
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
