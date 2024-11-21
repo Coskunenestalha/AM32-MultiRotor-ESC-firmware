@@ -988,7 +988,7 @@ void tenKhzRoutine(){
 
 
 	tenkhzcounter++;
-	if(tenkhzcounter > 10000){      // 1s sample interval 10000
+	/*if(tenkhzcounter > 10000){      // 1s sample interval 10000
 		consumed_current = (float)actual_current/360 + consumed_current;
 					switch (dshot_extended_telemetry){
 
@@ -1008,7 +1008,7 @@ void tenKhzRoutine(){
 					}
 
 		tenkhzcounter = 0;
-	}
+	}*/
 if(!armed && (cell_count == 0)){
 	if(inputSet){
 		if(adjusted_input == 0){
@@ -1074,7 +1074,7 @@ if(!armed && (cell_count == 0)){
   	  }else{
 	 	 duty_cycle = map(input, 47, 2047, minimum_duty_cycle, TIMER1_MAX_ARR);
 	  }
-	  if(tenkhzcounter%200 == 0){     // 1khz PID loop
+	  if(tenkhzcounter%10 == 0 && tenkhzcounter >500 ){     // 1khz PID loop
 		  if(use_current_limit && running){
 			use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current, CURRENT_LIMIT*100)/10000);
 			if(use_current_limit_adjust < minimum_duty_cycle){
